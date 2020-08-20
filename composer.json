@@ -1,0 +1,14 @@
+{
+    "name": "akrami/sudoku-solver",
+    "description": "solves sudoku",
+    "authors": [
+        {
+            "name": "Alireza Akrami",
+            "email": "akrami.ui@gmail.com"
+        }
+    ],
+    "require": {},
+    "require-dev": {
+        "phpunit/phpunit": "^9.3"
+    }
+}
