@@ -7,6 +7,7 @@ namespace App\Service;
 class Sudoku
 {
     protected $grid;
+    protected $fixed;
 
     /**
      * Sudoku constructor.
@@ -15,6 +16,16 @@ class Sudoku
     protected function __construct(array $grid)
     {
         $this->grid = $grid;
+
+        // generate `fixed` as a 9x9 false matrix
+        $this->fixed = array_fill(0,9,array_fill(0,9, false));
+
+        // now fill `fixed` based on `grid` values
+        foreach ($this->grid as $rowIndex => $row) {
+            foreach ($row as $colIndex=>$value) {
+                if ($value!=="0") $this->fixed[$rowIndex][$colIndex] = true;
+            }
+        }
     }
 
     /**
@@ -40,6 +51,15 @@ class Sudoku
     public function getGrid()
     {
         return $this->grid;
+    }
+
+    /**
+     * fixed getter
+     * @return array
+     */
+    public function getFixed()
+    {
+        return $this->fixed;
     }
 
     /**
