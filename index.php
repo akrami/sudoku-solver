@@ -22,10 +22,10 @@ $router->respond('GET', '/', function ($request, $response) {
 /**
  * Solve a sudoku
  */
-$router->respond('POST', '/solve', function (Request $request, Response $response){
-    if (preg_match('/application\/json/', $request->headers()->get('Content-Type'))){
+$router->respond('POST', '/solve', function (Request $request, Response $response) {
+    if (preg_match('/application\/json/', $request->headers()->get('Content-Type'))) {
         $body = json_decode($request->body());
-        if (isset($body->grid)){
+        if (isset($body->grid)) {
             $sudoku = Sudoku::importString($body->grid);
             $sudokuString = (string)$sudoku;
             // TODO: solve sudoku
