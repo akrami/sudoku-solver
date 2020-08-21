@@ -27,12 +27,11 @@ $router->respond('POST', '/solve', function (Request $request, Response $respons
         $body = json_decode($request->body());
         if (isset($body->grid)) {
             $sudoku = Sudoku::importString($body->grid);
-            $sudokuString = (string)$sudoku;
-            // TODO: solve sudoku
+            $sudoku->solve();
             $response->code(200);
             $response->json([
                 'status' => 'OK',
-                'data' => $sudokuString
+                'data' => (string)$sudoku
             ]);
             return true;
         }
