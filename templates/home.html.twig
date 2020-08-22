@@ -1,0 +1,149 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+    <h1 style="margin-bottom: 0;">Sudoku Solver</h1>
+    <hr>
+    <h5 style="margin-top: 0;">We solve your sudoku!</h5>
+
+    <div class="pure-g">
+        <div class="pure-u-1 pure-u-xl-1-2">
+            <table id="sudoku">
+                <tr>
+                    <td tabindex="1">0</td>
+                    <td tabindex="2">0</td>
+                    <td tabindex="3">0</td>
+                    <td tabindex="4" class="secondary">0</td>
+                    <td tabindex="5" class="secondary">0</td>
+                    <td tabindex="6" class="secondary">0</td>
+                    <td tabindex="7">0</td>
+                    <td tabindex="8">0</td>
+                    <td tabindex="9">0</td>
+                </tr>
+                <tr>
+                    <td tabindex="10">0</td>
+                    <td tabindex="11">0</td>
+                    <td tabindex="12">0</td>
+                    <td tabindex="13" class="secondary">0</td>
+                    <td tabindex="14" class="secondary">0</td>
+                    <td tabindex="15" class="secondary">0</td>
+                    <td tabindex="16">0</td>
+                    <td tabindex="17">0</td>
+                    <td tabindex="18">0</td>
+                </tr>
+                <tr>
+                    <td tabindex="19">0</td>
+                    <td tabindex="20">0</td>
+                    <td tabindex="21">0</td>
+                    <td tabindex="22" class="secondary">0</td>
+                    <td tabindex="23" class="secondary">0</td>
+                    <td tabindex="24" class="secondary">0</td>
+                    <td tabindex="25">0</td>
+                    <td tabindex="26">0</td>
+                    <td tabindex="27">0</td>
+                </tr>
+                <tr>
+                    <td tabindex="28" class="secondary">0</td>
+                    <td tabindex="29" class="secondary">0</td>
+                    <td tabindex="30" class="secondary">0</td>
+                    <td tabindex="31">0</td>
+                    <td tabindex="32">0</td>
+                    <td tabindex="33">0</td>
+                    <td tabindex="34" class="secondary">0</td>
+                    <td tabindex="35" class="secondary">0</td>
+                    <td tabindex="36" class="secondary">0</td>
+                </tr>
+                <tr>
+                    <td tabindex="37" class="secondary">0</td>
+                    <td tabindex="38" class="secondary">0</td>
+                    <td tabindex="39" class="secondary">0</td>
+                    <td tabindex="40">0</td>
+                    <td tabindex="41">0</td>
+                    <td tabindex="42">0</td>
+                    <td tabindex="43" class="secondary">0</td>
+                    <td tabindex="44" class="secondary">0</td>
+                    <td tabindex="45" class="secondary">0</td>
+                </tr>
+                <tr>
+                    <td tabindex="46" class="secondary">0</td>
+                    <td tabindex="47" class="secondary">0</td>
+                    <td tabindex="48" class="secondary">0</td>
+                    <td tabindex="49">0</td>
+                    <td tabindex="50">0</td>
+                    <td tabindex="51">0</td>
+                    <td tabindex="52" class="secondary">0</td>
+                    <td tabindex="53" class="secondary">0</td>
+                    <td tabindex="54" class="secondary">0</td>
+                </tr>
+                <tr>
+                    <td tabindex="55">0</td>
+                    <td tabindex="56">0</td>
+                    <td tabindex="57">0</td>
+                    <td tabindex="58" class="secondary">0</td>
+                    <td tabindex="59" class="secondary">0</td>
+                    <td tabindex="60" class="secondary">0</td>
+                    <td tabindex="61">0</td>
+                    <td tabindex="62">0</td>
+                    <td tabindex="63">0</td>
+                </tr>
+                <tr>
+                    <td tabindex="64">0</td>
+                    <td tabindex="65">0</td>
+                    <td tabindex="66">0</td>
+                    <td tabindex="67" class="secondary">0</td>
+                    <td tabindex="68" class="secondary">0</td>
+                    <td tabindex="69" class="secondary">0</td>
+                    <td tabindex="70">0</td>
+                    <td tabindex="71">0</td>
+                    <td tabindex="72">0</td>
+                </tr>
+                <tr>
+                    <td tabindex="73">0</td>
+                    <td tabindex="74">0</td>
+                    <td tabindex="75">0</td>
+                    <td tabindex="76" class="secondary">0</td>
+                    <td tabindex="77" class="secondary">0</td>
+                    <td tabindex="78" class="secondary">0</td>
+                    <td tabindex="79">0</td>
+                    <td tabindex="80">0</td>
+                    <td tabindex="81">0</td>
+                </tr>
+            </table>
+        </div>
+        <div class="pure-u-1 pure-u-xl-1-2">
+            <button id="solve">Solve Sudoku</button>
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block javascript %}
+// add event to each sudoku cell
+let cells = document.getElementById("sudoku").getElementsByTagName("td");
+for (let cell of cells) {
+    cell.addEventListener("keyup", event => {
+        const isNumber = isFinite(event.key);
+        if (isNumber) event.target.innerText = event.key;
+    });
+}
+
+// call api to solve the sudoku
+document.getElementById("solve").addEventListener("click", event => {
+    const before = document.getElementById("sudoku").innerText.replace(/\s/gi, '');
+    const HTTP = new XMLHttpRequest();
+    HTTP.open('POST', '/api/solve');
+    HTTP.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    HTTP.send(JSON.stringify({"grid": before}));
+    HTTP.onreadystatechange = e => {
+        if (HTTP.status===200 && HTTP.readyState===HTTP.DONE){
+            const after = JSON.parse(HTTP.responseText).data;
+            let i = 0;
+            for (const cell of cells) {
+                cell.innerText = after.charAt(i);
+                i++;
+            }
+        }
+    }
+});
+{% endblock %}
+

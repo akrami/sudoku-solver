@@ -1,0 +1,126 @@
+html, button, input, select, textarea,
+.pure-g [class *= "pure-u"] {
+    /* Set your content font stack here: */
+    font-family: "Poppins", sans-serif;
+}
+
+.container {
+    margin: 0 auto;
+    padding: 1em;
+}
+
+html {
+    font-size: 100%;
+}
+
+body {
+    background-color: white;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    line-height: 1.65;
+    color: #333;
+}
+
+p {
+    margin-bottom: 1.15rem;
+}
+
+h1, h2, h3, h4, h5 {
+    margin: 2.75rem 0 1.05rem;
+    font-family: 'Rubik', sans-serif;
+    font-weight: 400;
+    line-height: 1.15;
+}
+
+h1 {
+    margin-top: 0;
+    font-size: 4.209em;
+    font-weight: bolder;
+}
+
+h2 {
+    font-size: 3.157em;
+}
+
+h3 {
+    font-size: 2.369em;
+}
+
+h4 {
+    font-size: 1.777em;
+}
+
+h5 {
+    font-size: 1.333em;
+}
+
+small, .text_small {
+    font-size: 0.75em;
+}
+
+#sudoku {
+    border-collapse: collapse;
+}
+
+#sudoku td {
+    width: 50px;
+    height: 50px;
+    border-right: 1px solid #333333;
+    border-bottom: 1px solid #333333;
+    line-height: 50px;
+    text-align: center;
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+#sudoku td:hover,
+#sudoku td:focus {
+    background-color: #b7e8ff;
+    cursor: pointer;
+    outline: none;
+}
+
+#sudoku td:first-child {
+    border-left: 3px solid #333333;
+}
+
+#sudoku tr:first-child td {
+    border-top: 3px solid #333333;
+}
+
+#sudoku td:last-child,
+#sudoku td:nth-child(3),
+#sudoku td:nth-child(6) {
+    border-right: 3px solid #333333;
+}
+
+#sudoku tr:last-child td,
+#sudoku tr:nth-child(3) td,
+#sudoku tr:nth-child(6) td {
+    border-bottom: 3px solid #333333;
+}
+
+.secondary {
+    background-color: #EDEDED;
+}
+
+button {
+    display: inline-block;
+    padding: 0.7em 1.4em;
+    margin: 0 0.3em 0.3em 0;
+    border-radius: 0.15em;
+    text-decoration: none;
+    text-transform: uppercase;
+    font-weight: 400;
+    color: #FFFFFF;
+    background-color: #3369ff;
+    text-align: center;
+    outline: none;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #1953fd;
+    box-shadow: inset 0 -0.6em 0 -0.35em rgba(0, 0, 0, 0.17);
+}
