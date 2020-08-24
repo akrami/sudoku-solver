@@ -6,7 +6,7 @@
     <h5 style="margin-top: 0;">We solve your sudoku!</h5>
 
     <div class="pure-g">
-        <div class="pure-u-1 pure-u-xl-1-2">
+        <div class="pure-u-1 pure-u-xl-1-2 bottom-2">
             <table id="sudoku">
                 <tr>
                     <td tabindex="1">0</td>
@@ -110,8 +110,29 @@
             </table>
         </div>
         <div class="pure-u-1 pure-u-xl-1-2">
-            <button id="solve">Solve Sudoku</button>
+            <button id="solve"><i data-feather="heart"></i> Solve Sudoku</button>
+            <button id="import"><i data-feather="download"></i> Import</button>
+            <button id="export"><i data-feather="upload"></i> Export</button>
         </div>
+        <div class="overlay">
+            <div class="modal import">
+                <div class="close"><i data-feather="x"></i></div>
+                <div class="content">
+                    <h5><i data-feather="download"></i> Import</h5>
+                    <textarea id="importTextArea"></textarea>
+                    <button id="doImport"><i data-feather="download"></i> Import</button>
+                </div>
+            </div>
+            <div class="modal export">
+                <div class="close"><i data-feather="x"></i></div>
+                <div class="content">
+                    <h5><i data-feather="upload"></i> Export</h5>
+                    <textarea id="exportTextArea"></textarea>
+                    <button id="copy"><i data-feather="copy"></i> Copy</button>
+                </div>
+            </div>
+        </div>
+
     </div>
 
 
@@ -119,8 +140,7 @@
 
 {% block javascript %}
 // add event to each sudoku cell
-let cells = document.getElementById("sudoku").getElementsByTagName("td");
-for (let cell of cells) {
+for (let cell of document.getElementById("sudoku").getElementsByTagName("td")) {
     cell.addEventListener("keyup", event => {
         const isNumber = isFinite(event.key);
         if (isNumber) event.target.innerText = event.key;
@@ -129,21 +149,77 @@ for (let cell of cells) {
 
 // call api to solve the sudoku
 document.getElementById("solve").addEventListener("click", event => {
-    const before = document.getElementById("sudoku").innerText.replace(/\s/gi, '');
+    const before = getGrid();
     const HTTP = new XMLHttpRequest();
     HTTP.open('POST', '/api/solve');
     HTTP.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     HTTP.send(JSON.stringify({"grid": before}));
     HTTP.onreadystatechange = e => {
-        if (HTTP.status===200 && HTTP.readyState===HTTP.DONE){
+        if (HTTP.status === 200 && HTTP.readyState === HTTP.DONE) {
             const after = JSON.parse(HTTP.responseText).data;
-            let i = 0;
-            for (const cell of cells) {
-                cell.innerText = after.charAt(i);
-                i++;
-            }
+            setGrid(after);
         }
     }
 });
+
+// handle import visibility
+document.getElementById("import").addEventListener("click", event => {
+    document.getElementsByClassName("overlay")[0].style.visibility = "visible";
+    document.getElementsByClassName("modal import")[0].style.visibility = "visible";
+});
+
+// handle export
+document.getElementById("export").addEventListener("click", event => {
+    document.getElementById("exportTextArea").innerText = getGrid();
+    document.getElementsByClassName("overlay")[0].style.visibility = "visible";
+    document.getElementsByClassName("modal export")[0].style.visibility = "visible";
+});
+
+// handle close button on modals
+for (let close of document.getElementsByClassName("close")) {
+    close.addEventListener("click", event => {
+        document.getElementsByClassName("overlay")[0].style.visibility = "hidden";
+        for (let modal of document.getElementsByClassName("modal")) {
+            modal.style.visibility = "hidden";
+        }
+    });
+}
+
+// handle copy in export
+document.getElementById("copy").addEventListener("click", event => {
+    window.navigator.clipboard.writeText(getGrid()).then(() => {
+        event.target.style.backgroundColor = "green";
+        setTimeout(() => {
+            document.getElementById("copy").style.backgroundColor = "#3369ff";
+        }, 3000);
+    });
+});
+
+// handle import
+document.getElementById("doImport").addEventListener("click", event => {
+    let goal = document.getElementById("importTextArea").value.replace(/[^\d]/gi, '');
+    while(goal.length < 81) goal+="0";
+    setGrid(goal);
+    document.getElementById("importTextArea").value = "";
+    document.getElementsByClassName("overlay")[0].style.visibility = "hidden";
+    for (let modal of document.getElementsByClassName("modal")) {
+        modal.style.visibility = "hidden";
+    }
+});
+
+// fill the grid
+const setGrid = data => {
+    let cells = document.getElementById("sudoku").getElementsByTagName("td");
+    let index = 0;
+    for (const cell of cells) {
+        cell.innerText = data.charAt(index);
+        index++;
+    }
+}
+
+// return the grid
+const getGrid = () => {
+    return document.getElementById("sudoku").innerText.replace(/\s/gi, '');
+}
 {% endblock %}
 
