@@ -142,9 +142,14 @@
 {% block javascript %}
 // add event to each sudoku cell
 for (let cell of document.getElementById("sudoku").getElementsByTagName("td")) {
+    cell.id = "cell-"+cell.tabIndex;
     cell.addEventListener("keyup", event => {
         const isNumber = isFinite(event.key);
-        if (isNumber) event.target.innerText = event.key;
+        if (isNumber) {
+            event.target.innerText = event.key;
+            const tabIndex = event.target.tabIndex === 81 ? 1 : event.target.tabIndex + 1;
+            document.getElementById("cell-"+tabIndex).focus();
+        }
     });
 }
 
@@ -214,7 +219,7 @@ document.getElementById("reset").addEventListener("click", () => {
 
 // fill the grid
 const setGrid = data => {
-    while(data.length < 81) data+="0";
+    while (data.length < 81) data += "0";
     let cells = document.getElementById("sudoku").getElementsByTagName("td");
     let index = 0;
     for (const cell of cells) {
