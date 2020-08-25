@@ -113,6 +113,7 @@
             <button id="solve"><i data-feather="heart"></i> Solve Sudoku</button>
             <button id="import"><i data-feather="download"></i> Import</button>
             <button id="export"><i data-feather="upload"></i> Export</button>
+            <button id="reset" style="background-color: red;"><i data-feather="trash-2"></i> Reset</button>
         </div>
         <div class="overlay">
             <div class="modal import">
@@ -148,13 +149,13 @@ for (let cell of document.getElementById("sudoku").getElementsByTagName("td")) {
 }
 
 // call api to solve the sudoku
-document.getElementById("solve").addEventListener("click", event => {
+document.getElementById("solve").addEventListener("click", () => {
     const before = getGrid();
     const HTTP = new XMLHttpRequest();
     HTTP.open('POST', '/api/solve');
     HTTP.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     HTTP.send(JSON.stringify({"grid": before}));
-    HTTP.onreadystatechange = e => {
+    HTTP.onreadystatechange = () => {
         if (HTTP.status === 200 && HTTP.readyState === HTTP.DONE) {
             const after = JSON.parse(HTTP.responseText).data;
             setGrid(after);
@@ -163,13 +164,13 @@ document.getElementById("solve").addEventListener("click", event => {
 });
 
 // handle import visibility
-document.getElementById("import").addEventListener("click", event => {
+document.getElementById("import").addEventListener("click", () => {
     document.getElementsByClassName("overlay")[0].style.visibility = "visible";
     document.getElementsByClassName("modal import")[0].style.visibility = "visible";
 });
 
 // handle export
-document.getElementById("export").addEventListener("click", event => {
+document.getElementById("export").addEventListener("click", () => {
     document.getElementById("exportTextArea").innerText = getGrid();
     document.getElementsByClassName("overlay")[0].style.visibility = "visible";
     document.getElementsByClassName("modal export")[0].style.visibility = "visible";
@@ -177,7 +178,7 @@ document.getElementById("export").addEventListener("click", event => {
 
 // handle close button on modals
 for (let close of document.getElementsByClassName("close")) {
-    close.addEventListener("click", event => {
+    close.addEventListener("click", () => {
         document.getElementsByClassName("overlay")[0].style.visibility = "hidden";
         for (let modal of document.getElementsByClassName("modal")) {
             modal.style.visibility = "hidden";
@@ -196,9 +197,8 @@ document.getElementById("copy").addEventListener("click", event => {
 });
 
 // handle import
-document.getElementById("doImport").addEventListener("click", event => {
+document.getElementById("doImport").addEventListener("click", () => {
     let goal = document.getElementById("importTextArea").value.replace(/[^\d]/gi, '');
-    while(goal.length < 81) goal+="0";
     setGrid(goal);
     document.getElementById("importTextArea").value = "";
     document.getElementsByClassName("overlay")[0].style.visibility = "hidden";
@@ -207,8 +207,14 @@ document.getElementById("doImport").addEventListener("click", event => {
     }
 });
 
+// handle reset
+document.getElementById("reset").addEventListener("click", () => {
+    setGrid("");
+});
+
 // fill the grid
 const setGrid = data => {
+    while(data.length < 81) data+="0";
     let cells = document.getElementById("sudoku").getElementsByTagName("td");
     let index = 0;
     for (const cell of cells) {
